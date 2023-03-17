@@ -9,7 +9,7 @@
                 "-g",
                 "${file}",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "${fileDirname}/../bin/helmod2"
             ],
             "options": {
                 "cwd": "${fileDirname}"
