@@ -33,3 +33,5 @@
 
 #everything in the bin directory.
 bin/*
+#everythin in build directory
+build/*
