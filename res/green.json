@@ -1,0 +1,10 @@
+{
+    "name" : "Green circuit",
+    "internals" : {},
+    "delta" : 
+    {
+        "Copper cable" : -6,
+        "Iron plate" : -2,
+        "Green circuit" : 2
+    }
+}

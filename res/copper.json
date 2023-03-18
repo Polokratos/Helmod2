@@ -1,0 +1,9 @@
+{
+    "name" : "Copper plates",
+    "internals" : {},
+    "delta" : 
+    {
+        "Copper ore" : -0.3125,
+        "Copper plate" : 0.3125
+    }
+}
