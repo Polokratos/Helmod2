@@ -13,19 +13,19 @@ typedef void (*CommandExecutor)(Command);
 //Also a nice way to visualize requirements for REPL interface
 const std::string helpmessage = 
 "Available commands: \n"
-"help : prints this message \n"
-"loadr <path> : loads production lines from path\n"
-"new <name> : creates new, empty production line\n"
+"help                              : prints this message \n"
+"loadr <path>                      : loads production lines from path\n"
+"new <name>                        : creates new, empty production line\n"
 "add [-s] <b_name> <i_name> <pval> : adds a new production block b_name,\n"
 "then rescales it so that the total production of i_name in the entire line will be equal p_val\n"
 "if production block b_name already exists, does not add a 2nd time, only rescales.\n"
-"remove [-s] <b_name> : removes a production block \n"
-"rescale [-s] <i_name> <pval> : rescales the entire line so that the production of i_name reaches pval\n"
+"remove [-s] <b_name>              : removes a production block \n"
+"rescale [-s] <i_name> <pval>      : rescales the entire line so that the production of i_name reaches pval\n"
 "In add,remove and rescale commands, unless the -s option is specified, dump will be called immedietaly afterwards.\n"
-"save <path> : saves the current line to path \n"
-"dump [-a] : prints production values of current line to screen.\n"
-"if -a option is specified, all details of current production line will be printed."
-"quit : Exits the program."; //not given an executor, handled directly in main()
+"save <path>                       : saves the current line to path \n"
+"dump [-a]                         : prints production values of current line to screen.\n"
+"if -a option is specified, all details of current production line will be printed.\n"
+"quit                              : Exits the program.\n"; //not given an executor, handled directly in main()
 
 Command parseCommand();
 void help(Command);
@@ -36,7 +36,6 @@ void remove(Command);
 void rescale(Command);
 void save(Command);
 void dump(Command);
-const std::unordered_map<std::string,CommandExecutor> executors = initExecutors();
 const std::unordered_map<std::string,CommandExecutor> initExecutors()
 {
     std::unordered_map<std::string,CommandExecutor> retval;
@@ -48,14 +47,12 @@ const std::unordered_map<std::string,CommandExecutor> initExecutors()
     retval["rescale"] = rescale;
     retval["save"] = save;
     retval["dump"] = dump;
-}
+    return retval;
+} const std::unordered_map<std::string,CommandExecutor> executors = initExecutors();
 
 int main(int argc, char** argv)
 {
-    //initialization
-    
-
-    std::cout << "Welcome to Helmod 2. \n" << std:: endl;
+    std::cout << "Welcome to Helmod 2. \n";
     while (true)
     {
         std::queue<std::string> command = parseCommand();
@@ -74,7 +71,25 @@ int main(int argc, char** argv)
     return 0;
 }
 
-std::queue<std::string> parseCommand()
+Command parseCommand()
 {
-
+    std::string str;
+    std::cin >> str;
+    std::string buf;                 // Have a buffer string
+    std::stringstream ss(str);       // Insert the string into a stream
+    Command tokens; // Create vector to hold our words
+    while (ss >> buf)
+        tokens.push(buf);
+    return tokens;
 }
+void help(Command)
+{
+    std::cout << helpmessage;
+}
+void load(Command){}
+void new_line(Command){}
+void add(Command){}
+void remove(Command){}
+void rescale(Command){}
+void save(Command){}
+void dump(Command){}
