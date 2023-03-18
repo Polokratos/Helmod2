@@ -6,5 +6,5 @@
         "ingredientB" : 2,
         "ingredientC" : -3
     },
-    "internal" : "atomic"
+    "internal" : {}
 }
