@@ -1,10 +1,10 @@
 {
     "name" : "example",
-    "time" : 0.5,
     "delta" : 
     {
         "ingredientA" : 1,
         "ingredientB" : 2,
         "ingredientC" : -3
-    }
+    },
+    "internal" : "atomic"
 }
