@@ -10,17 +10,25 @@ ProductionLine::ProductionLine(json builder)
     delta = builder["delta"].get<std::unordered_map<std::string,double>>();
     internal = builder["internal"].get<std::unordered_map<std::string,double>>();
 }
-
-void ProductionLine::add(ProductionLine& recipe, Ingredient product, double pval)
+ProductionLine::ProductionLine(std::string name)
 {
-    if(recipe.delta[product] == 0) throw new std::invalid_argument("Recipe linearly independent to product!");
-    double scale = ((pval - delta[product]) / recipe.delta[product]); // pval = this.delta + scale * recipe.delta, solve for scale.
+    this->name = name;
+}
+ProductionLine::~ProductionLine() noexcept
+{
+    delta.clear();
+}
+
+void ProductionLine::add(const ProductionLine& recipe, Ingredient product, double pval)
+{
+    if(recipe.delta.at(product) == 0) throw new std::invalid_argument("Recipe linearly independent to product!");
+    double scale = ((pval - delta[product]) / recipe.delta.at(product)); // pval = this.delta + scale * recipe.delta, solve for scale.
     internal[recipe.name] += scale;
     for (auto &&[ingredient,change] : recipe.delta)
         delta[ingredient] += change * scale;
     
 }
-void ProductionLine::remove(ProductionLine& recipe)
+void ProductionLine::remove(const ProductionLine& recipe)
 {
     for (auto &&[ingredient,change] : recipe.delta)
         delta[ingredient] -= change * internal[recipe.name];
@@ -35,8 +43,15 @@ void ProductionLine::rescale(Ingredient product, double pval)
     for (auto &&[k,v] : delta)
         v*= scale;
 }
-/*
 
-(pval - deltaOld)/innerDelta =  scale
-
-*/
+void ProductionLine::dumpInternal()
+{
+    for (auto &&[k,v] : internal)
+        std::cout << k << " : " << v << "\n";
+    
+}
+void ProductionLine::dumpDelta()
+{
+    for (auto &&[k,v] : delta)
+        if (v != 0) std::cout << k << " : " << v << "\n";
+} 

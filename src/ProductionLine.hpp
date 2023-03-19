@@ -22,8 +22,12 @@ public:
 
     //JSON object constructor
     ProductionLine(json builder);
-    void add(ProductionLine& recipe, Ingredient product, double pval);
-    void remove(ProductionLine& recipe);
-    void rescale(Ingredient product, double pval);
+    ProductionLine(std::string name);
+    ~ProductionLine();
+    void add(const ProductionLine& recipe,const Ingredient product,const double pval);
+    void remove(const ProductionLine& recipe);
+    void rescale(const Ingredient product,const double pval);
+    void dumpDelta();
+    void dumpInternal();
 };
 #endif

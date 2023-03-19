@@ -1,9 +1,0 @@
-{
-    "name" : "Iron plates",
-    "internals" : {},
-    "delta" : 
-    {
-        "Iron ore" : -0.3125,
-        "Iron plate" : 0.3125
-    }
-}
