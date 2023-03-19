@@ -16,17 +16,25 @@ ProductionLine* active = nullptr;
 const std::string helpmessage = 
 "Available commands: \n"
 "help                              : Prints this message. \n"
-"load  <path>                       : Loads production lines from path.\n"
+"load  <path>                      : Loads production lines from path.\n"
 "new <name>                        : Creates new, empty production line.\n"
 "add [-s] <b_name> <i_name> <pval> : Adds a new production block b_name,\n"
-"then rescales it so that the total production of i_name in the entire line will be equal p_val.\n"
-"If production block b_name already exists, does not add a 2nd time, only rescales.\n"
+"                                    then rescales it so that \n"
+"                                    the total production of i_name \n"
+"                                    in the entire line will be equal p_val.\n"
+"                                    If production block b_name already exists,\n"
+"                                    does not add a 2nd time, only rescales.\n"
 "remove [-s] <b_name>              : Removes a production block. \n"
-"rescale [-s] <i_name> <pval>      : Rescales the entire line so that the production of i_name reaches pval.\n"
-"In add, remove and rescale commands, unless the -s option is specified, dump will be called immedietaly afterwards.\n"
+"rescale [-s] <i_name> <pval>      : Rescales the entire line, \n"
+"                                    so that the production of i_name reaches pval.\n"
+"In add, remove and rescale commands, unless the -s option is specified,\n"
+"dump will be called immedietaly afterwards.\n"
 "save <path>                       : Saves the current line to path.\n"
-"dump [-a]                         : Prints production values of current line to screen.\n"
-"If -a option is specified, all details of current production line will be printed.\n"
+"dump [-a] [name]                  : Prints production values of <name> line to screen.\n"
+"                                    If -a option is specified, \n"
+"                                    all details of current production line will be printed.\n"
+"                                    If no name is specified,\n"
+"                                    the active production line is printed. \n"
 "quit                              : Exits the program.\n"; //not given an executor, handled directly in main()
 
 Command parseCommand();
@@ -51,6 +59,7 @@ int main(int argc, char** argv)
     std::cout << "Welcome to Helmod 2.\n";
     while (true)
     {
+        std::cout << ">";
         std::queue<std::string> command = parseCommand();
         std::string commandType = command.front();
         if(commandType == "quit") break; 
@@ -154,7 +163,19 @@ void save(Command c)
 void dump(Command c)
 {
     bool all = false;
-    if(!c.empty()) if(c.front() == "-a") {all = true; c.pop();}
-    active->dumpDelta();
-    if(all) active->dumpInternal();
+    if(!c.empty())
+        if(c.front() == "-a") 
+            {all = true; c.pop();}
+    if(c.empty())
+    {
+        active->dumpDelta();
+        if(all)
+            active->dumpInternal();
+    }
+    else
+    {
+        ProductionLine::blocks.at(c.front()).dumpDelta();
+        if(all)
+            ProductionLine::blocks.at(c.front()).dumpInternal();
+    }   
 }
