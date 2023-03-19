@@ -1,7 +1,7 @@
 #include "ProductionLine.hpp"
 #include <stdexcept>
 
-std::unordered_map<std::string,ProductionLine*> ProductionLine::blocks;
+std::unordered_map<std::string,ProductionLine> ProductionLine::blocks;
 
 //JSON object constructor
 ProductionLine::ProductionLine(json builder)
@@ -14,6 +14,7 @@ ProductionLine::ProductionLine(std::string name)
 {
     this->name = name;
 }
+ProductionLine::ProductionLine(){}
 ProductionLine::~ProductionLine() noexcept
 {
     delta.clear();
@@ -21,6 +22,7 @@ ProductionLine::~ProductionLine() noexcept
 
 void ProductionLine::add(const ProductionLine& recipe, Ingredient product, double pval)
 {
+    if(recipe.delta.find(product) == recipe.delta.end()) throw new std::invalid_argument("Recipe linearly independent to product!");
     if(recipe.delta.at(product) == 0) throw new std::invalid_argument("Recipe linearly independent to product!");
     double scale = ((pval - delta[product]) / recipe.delta.at(product)); // pval = this.delta + scale * recipe.delta, solve for scale.
     internal[recipe.name] += scale;
@@ -46,12 +48,14 @@ void ProductionLine::rescale(Ingredient product, double pval)
 
 void ProductionLine::dumpInternal()
 {
+    std::cout << "Internal blocks:\n";
     for (auto &&[k,v] : internal)
         std::cout << k << " : " << v << "\n";
     
 }
 void ProductionLine::dumpDelta()
 {
+    std::cout << "Production values:\n";
     for (auto &&[k,v] : delta)
         if (v != 0) std::cout << k << " : " << v << "\n";
 } 

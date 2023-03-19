@@ -94,11 +94,10 @@ void load(Command c)
 {
     std::ifstream f;
     f.open(c.front());
-    //std::string x;
-    //while(f >> x) std::cout << x;
     if(!f) std::cout << "file not found\n";
     json data = json::parse(f);
     ProductionLine* block = new ProductionLine(data);
+    ProductionLine::blocks[block->name] = *block;
     std::cout << "Loaded: " << block->name << '\n';
 }
 void new_line(Command c)
@@ -109,27 +108,53 @@ void new_line(Command c)
 void add(Command c)
 {
     bool dmp = true;
-    if(c.front() == "-s") {dmp = true; c.pop();}
+    if(c.front() == "-s") {dmp = false; c.pop();}
 
     std::string bname = c.front(); c.pop();
     Ingredient iname = c.front(); c.pop();
     double pval = stod(c.front());
-    active->add(*ProductionLine::blocks[bname],iname,pval);
-    if(dmp) {dump(c);}
+
+    ProductionLine block = ProductionLine::blocks.at(bname);
+
+    active->add(block,iname,pval);
+    if(dmp) {active->dumpDelta();}
 }
 void remove(Command c)
 {
-
+    bool dmp = true;
+    if(c.front() == "-s") {dmp = false; c.pop();}
+    std::string bname = c.front(); c.pop();
+    active->remove(bname);
+    if(dmp) {active->dumpDelta();}
 }
 void rescale(Command c)
 {
-
+    bool dmp = true;
+    if(c.front() == "-s") {dmp = false; c.pop();}
+    Ingredient iname = c.front(); c.pop();
+    double pval = stod(c.front());
+    active->rescale(iname,pval);
+    if(dmp) {active->dumpDelta();}
 }
 void save(Command c)
 {
-
+    std::string path = c.front();
+    std::ofstream f;
+    f.open(path);
+    json data;
+    data["name"] = active->name;
+    data["delta"] = json::object();
+    data["internal"] = json::object();
+    for (auto &&[k,v] : active->delta)
+        data["delta"][k] = v;
+    for (auto &&[k,v] : active->internal)
+        data["internal"][k] = v;
+    f << std::setw(4) << data << std::endl;
 }
 void dump(Command c)
 {
-
+    bool all = false;
+    if(!c.empty()) if(c.front() == "-a") {all = true; c.pop();}
+    active->dumpDelta();
+    if(all) active->dumpInternal();
 }
