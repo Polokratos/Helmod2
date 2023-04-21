@@ -1,8 +1,6 @@
 # Helmod2
 Kalkulator linii montażowych, wykorzystujący interfejs REPL.
 
-# TODO 
-Dodaj helpa i format pliku. Złap kiepskie ścieżki.
 
 # About
 Rozważamy następującą klasę problemu:

@@ -16,7 +16,7 @@ ProductionLine* active = nullptr;
 const std::string helpmessage = 
 "Available commands: \n"
 "help                              : Prints this message. \n"
-"load  <path>                      : Loads production lines from path.\n"
+"load  <path>                      : Loads production lines (JSON) from path.\n"
 "new <name>                        : Creates new, empty production line.\n"
 "add [-s] <b_name> <i_name> <pval> : Adds a new production block b_name,\n"
 "                                    then rescales it so that \n"
