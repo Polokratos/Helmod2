@@ -46,6 +46,7 @@ void remove(Command);
 void rescale(Command);
 void save(Command);
 void dump(Command);
+
 //Poor man's switch on strings
 const std::unordered_map<std::string,CommandExecutor> initExecutors()
 {
@@ -57,26 +58,32 @@ const std::unordered_map<std::string,CommandExecutor> initExecutors()
 int main(int argc, char** argv)
 {
     std::cout << "Welcome to Helmod 2.\n";
+    active = new ProductionLine((std::string)"New Line");
     while (true)
     {
-        std::cout << ">";
-        std::queue<std::string> command = parseCommand();
-        std::string commandType = command.front();
-        if(commandType == "quit") break; 
-        if(executors.find(commandType) == executors.end())
-        {
-            std::cout << "invalid command: " << commandType << std::endl;
-            continue;
-        }
-        command.pop(); // a command executor does not need to hear its name, so we pop it.
         try
         {
+            std::cout << ">";
+            std::queue<std::string> command = parseCommand();
+            std::string commandType = command.front();
+            if(commandType == "quit") break; 
+            if(executors.find(commandType) == executors.end())
+            {
+                std::cout << "invalid command: " << commandType << std::endl;
+                continue;
+            }
+            command.pop(); // a command executor does not need to hear its name, so we pop it.
+
             executors.at(commandType)(command);
         }
         catch(std::exception* e)
         {
             std::cout << e->what() << '\n';
             delete e; e = nullptr;
+        }
+        catch(...)
+        {
+            std::cout << "Unable to parse command. Try again. \n";
         }
         
     }
